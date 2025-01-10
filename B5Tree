@@ -1,0 +1,205 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// Structure for TreeNode
+struct TreeNode {
+    string label;   // Label of the node (Chapter, Section, or Subsection)
+    string name;    // Name of the node (Chapter, Section, or Subsection)
+    TreeNode* leftChild;  // Pointer to the left child (first child)
+    TreeNode* rightChild; // Pointer to the right sibling (next sibling)
+};
+
+// Function to create a new node
+TreeNode* createNode(string label, string nodeName) {
+    TreeNode* newNode = new TreeNode();
+    newNode->label = label;
+    newNode->name = nodeName;
+    newNode->leftChild = nullptr;
+    newNode->rightChild = nullptr;
+    return newNode;
+}
+
+// Function to add a left child to a node
+void addLeftChild(TreeNode* parent, string label, string childName) {
+    if (!parent->leftChild) {
+        parent->leftChild = createNode(label, childName);
+    } else {
+        cout << "Left child already exists for " << parent->name << ".\n";
+    }
+}
+
+// Function to add a right sibling to a node
+void addRightSibling(TreeNode* node, string label, string siblingName) {
+    while (node->rightChild) {
+        node = node->rightChild; // Traverse to the last sibling
+    }
+    node->rightChild = createNode(label, siblingName);
+}
+
+// Function to print the tree using nested for loops
+void printTree(TreeNode* root) {
+    if (!root) return;
+
+    cout << root->name << " (" << root->label << ")" << endl; // Print the root
+
+    TreeNode* chapter = root->leftChild; // Start from the first chapter
+    for (TreeNode* i = chapter; i != nullptr; i = i->rightChild) {
+        cout << "  " << i->name << " (" << i->label << ")" << endl; // Print chapter
+
+        TreeNode* section = i->leftChild; // Start from the first section of the chapter
+        for (TreeNode* j = section; j != nullptr; j = j->rightChild) {
+            cout << "    " << j->name << " (" << j->label << ")" << endl; // Print section
+
+            TreeNode* subsection = j->leftChild; // Start from the first subsection of the section
+            for (TreeNode* k = subsection; k != nullptr; k = k->rightChild) {
+                cout << "      " << k->name << " (" << k->label << ")" << endl; // Print subsection
+            }
+        }
+    }
+}
+
+// Function to find a node by name
+TreeNode* findNode(TreeNode* root, const string& nodeName) {
+    if (!root) return nullptr;
+    if (root->name == nodeName) return root;
+
+    TreeNode* found = findNode(root->leftChild, nodeName);
+    if (found) return found;
+
+    return findNode(root->rightChild, nodeName);
+}
+
+int main() {
+    TreeNode* root = nullptr; // Root of the tree
+    int choice;
+
+    do {
+        // Display menu options
+        cout << "\nMenu Options:\n";
+        cout << "1. Create Tree\n";
+        cout << "2. Add Chapter\n";
+        cout << "3. Add Section\n";
+        cout << "4. Add Subsection\n";
+        cout << "5. Print Tree\n";
+        cout << "6. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                if (root) {
+                    cout << "Tree already exists. Cannot create a new tree.\n";
+                } else {
+                    string rootLabel, rootName;
+                    cout << "Enter the label for the root node (e.g., Book): ";
+                    cin.ignore();
+                    getline(cin, rootLabel);
+                    cout << "Enter the name of the root node: ";
+                    getline(cin, rootName);
+                    root = createNode(rootLabel, rootName);
+                    cout << "Tree with root \"" << rootName << "\" created successfully.\n";
+                }
+                break;
+            }
+
+            case 2: {
+                if (!root) {
+                    cout << "No tree exists. Please create a tree first.\n";
+                } else {
+                    string chapterLabel, chapterName;
+                    cout << "Enter the label for the chapter (e.g., Chapter): ";
+                    cin.ignore();
+                    getline(cin, chapterLabel);
+                    cout << "Enter the name of the chapter: ";
+                    getline(cin, chapterName);
+                    if (!root->leftChild) {
+                        addLeftChild(root, chapterLabel, chapterName); // Add first chapter as left child
+                    } else {
+                        addRightSibling(root->leftChild, chapterLabel, chapterName); // Add as sibling
+                    }
+                    cout << "Chapter \"" << chapterName << "\" added successfully.\n";
+                }
+                break;
+            }
+
+            case 3: {
+                if (!root) {
+                    cout << "No tree exists. Please create a tree first.\n";
+                } else {
+                    string chapterName, sectionLabel, sectionName;
+                    cout << "Enter the name of the chapter to add the section to: ";
+                    cin.ignore();
+                    getline(cin, chapterName);
+
+                    TreeNode* chapterNode = findNode(root, chapterName);
+                    if (!chapterNode) {
+                        cout << "Chapter \"" << chapterName << "\" not found.\n";
+                    } else {
+                        cout << "Enter the label for the section (e.g., Section): ";
+                        getline(cin, sectionLabel);
+                        cout << "Enter the name of the section: ";
+                        getline(cin, sectionName);
+                        if (!chapterNode->leftChild) {
+                            addLeftChild(chapterNode, sectionLabel, sectionName); // Add first section
+                        } else {
+                            addRightSibling(chapterNode->leftChild, sectionLabel, sectionName); // Add as sibling
+                        }
+                        cout << "Section \"" << sectionName << "\" added to chapter \"" << chapterName << "\".\n";
+                    }
+                }
+                break;
+            }
+
+            case 4: {
+                if (!root) {
+                    cout << "No tree exists. Please create a tree first.\n";
+                } else {
+                    string sectionName, subsectionLabel, subsectionName;
+                    cout << "Enter the name of the section to add the subsection to: ";
+                    cin.ignore();
+                    getline(cin, sectionName);
+
+                    TreeNode* sectionNode = findNode(root, sectionName);
+                    if (!sectionNode) {
+                        cout << "Section \"" << sectionName << "\" not found.\n";
+                    } else {
+                        cout << "Enter the label for the subsection (e.g., Subsection): ";
+                        getline(cin, subsectionLabel);
+                        cout << "Enter the name of the subsection: ";
+                        getline(cin, subsectionName);
+                        if (!sectionNode->leftChild) {
+                            addLeftChild(sectionNode, subsectionLabel, subsectionName); // Add first subsection
+                        } else {
+                            addRightSibling(sectionNode->leftChild, subsectionLabel, subsectionName); // Add as sibling
+                        }
+                        cout << "Subsection \"" << subsectionName << "\" added to section \"" << sectionName << "\".\n";
+                    }
+                }
+                break;
+            }
+
+            case 5: {
+                if (!root) {
+                    cout << "No tree exists. Please create a tree first.\n";
+                } else {
+                    cout << "Tree Structure:\n";
+                    printTree(root);
+                }
+                break;
+            }
+
+            case 6: {
+                cout << "Exiting program.\n";
+                break;
+            }
+
+            default: {
+                cout << "Invalid choice. Please try again.\n";
+            }
+        }
+    } while (choice != 6);
+
+    return 0;
+}
