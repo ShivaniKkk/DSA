@@ -1,11 +1,8 @@
-
-
 /*Problem Statement: A book consists of chapters, chapters consist of sections and sections consist of subsections. Construct a tree and pr
 int the nodes. Find the time and space requirements of your method.*/
 
 #include <iostream>
 #include <string.h>
-
 using namespace std;
 
 struct node
@@ -64,20 +61,16 @@ class GT
 
 	void display(node *r)
 	{
-		cout << endl
-			 << "Name of book:\t";
+		cout << endl<< "Name of book:\t";
 		cout << root->label << endl;
-		cout << endl
-			 << "Number of chapters:\t";
+		cout << endl<< "Number of chapters:\t";
 		cout << root->ch_count << endl;
 
 		for (int i = 0; i < root->ch_count; i++)
 		{
-			cout << endl
-				 << "Name of chapter:\t";
+			cout << endl<< "Name of chapter:\t";
 			cout << root->child[i]->label << endl;
-			cout << endl
-				 << "Number of sections:\t";
+			cout << endl<< "Number of sections:\t";
 			cout << root->child[i]->ch_count << endl;
 
 			for (int j = 0; j < root->child[i]->ch_count; j++)
