@@ -35,16 +35,14 @@ void studentDatabase::searchStudent() {
     int roll;
     student s;
     bool status = false;
-
-    // take input of roll number to delete
+    
     cout << "Roll number to search:\t";
     cin >> roll;
 
-    // opening files to delete a record
     ifstream readFile;
     readFile.open(fileName, ios::in | ios::binary);
 
-    // looking for record
+  
     while (readFile.read((char*)&s, sizeof(student))) {
         if (s.rollNo == roll) {
             status = true;
@@ -71,18 +69,17 @@ void studentDatabase::deleteStudent() {
     student s;
     bool status = false;
 
-    // take input of roll number to delete
+    
     cout << "Roll number to delete:\t";
     cin >> roll;
 
-    // opening files to delete a record
     ifstream readFile;
     readFile.open(fileName, ios::in | ios::binary);
     ofstream writeFile;
     writeFile.open("~" + fileName, ios::out | ios::binary);
     writeFile.clear();
 
-    // looking for record
+  
     while (readFile.read((char*)&s, sizeof(student))) {
         if (s.rollNo == roll) {
             status = true;
@@ -93,7 +90,7 @@ void studentDatabase::deleteStudent() {
     readFile.close();
     writeFile.close();
 
-    // moving temp file back to original file
+   
     if (status) {
         readFile.open("~" + fileName, ios::in | ios::binary);
         writeFile.open(fileName, ios::out | ios::binary);
@@ -103,7 +100,7 @@ void studentDatabase::deleteStudent() {
         readFile.close();
         writeFile.close();
 
-        // remove("~"+fileName);
+     
         cout << "Record deleted." << endl;
     } else {
         cout << "Record not found." << endl;
@@ -118,14 +115,15 @@ void studentDatabase::addStudent() {
     cin.ignore();
     cin.getline(s.name, 50);
     cout << "Division:\t";
-    // cin.ignore();
+
+    
     cin >> s.div;
     cout << "Address:\t";
     cin.ignore();
     cin.getline(s.address, 100);
-    // cin.ignore();
+    
     ofstream file(fileName, ios::out | ios::binary | ios::app);
-    // file.seekp(ios::end);
+   
     file.write((char*)&s, sizeof(student)) << flush;
     if (file.fail()) {
         cout << "Failed to add student record." << endl;
@@ -157,7 +155,7 @@ int main() {
     int ch;
     studentDatabase db;
 
-    // loop
+
     do {
         cout << endl;
         cout << "--- MAIN MENU ---" << endl;
