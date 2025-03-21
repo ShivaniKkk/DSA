@@ -91,14 +91,14 @@ void employeeDatabase::addEmployee(int eid, char name[50], char dest[50], int sa
     data_file.write((char *)&emp, sizeof(emp));
     current.key = eid;
     current.position = pos;
-    // cout << pos << endl;
+    
     if (update) {
         index_file.open(index_file_name, ios::binary | ios::out);
         index_file.seekp(ipos, ios::beg);
         index_file.write((char *)&current, sizeof(current));
     } else {
         bool written = false;
-        // inserting record in sorted order
+    
         vector<index_pair> index_pairs;
         index_file.open(index_file_name, ios::binary | ios::in);
         while (index_file.read((char *)&temp, sizeof(index_pair))) {
@@ -126,7 +126,7 @@ void employeeDatabase::addEmployee(int eid, char name[50], char dest[50], int sa
         }
     }
     cout << "Employee added successfully." << endl;
-// close and exit
+
 exit_addEmployee:
     data_file.close();
     index_file.close();
